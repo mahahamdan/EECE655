@@ -1,5 +1,5 @@
 import threading
-from scapy.all import IP, TCP, Ether, sniff
+from scapy.all import IPv6, IP, TCP, Ether, sniff
 
 # we will use threading to run multiple functions at the same time 
 # and thus not lose any packet while processing the data
@@ -15,7 +15,7 @@ def packetsniffer():
 
 # we will define another function to extract information from the packet 
 def packet_extract(packet):
-
+    try: 
         #created dictionary to store packet information 
         packet_info = {
              "srcIp": packet[IP].src,
@@ -43,6 +43,9 @@ def packet_extract(packet):
              #will get a float representing the time in seconds since the epoch
                      
         }
+    except IndexError:
+        "srcIp": packet[IPv6].src
+        "destIp": packet[IPv6].dst
 
         #add packet_info to the sharedData list
         sharedData.append(packet_info)
