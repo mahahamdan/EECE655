@@ -18,12 +18,12 @@ def packet_extract(packet):
 
         #created dictionary to store packet information 
         packet_info = {
-             "Src IP": packet[IP].src,
+             "srcIp": packet[IP].src,
              #will get a string representing the IP address
-             "Dst IP" : packet[IP].dst,
-             "Ack Number" : packet[TCP].ack,
+             "dstIp" : packet[IP].dst,
+             "ackNb" : packet[TCP].ack,
              #will get an integer representing the ack nunmber
-             "Flags": packet[TCP].flags,
+             "flags": packet[TCP].flags,
              #will get an integer represeting each flag:
              #ACK -> 16 (binary: 010000)
              #PSH -> 8 (binary: 001000)
@@ -31,15 +31,15 @@ def packet_extract(packet):
              #SYN -> 2 (binary: 000010)
              #FIN -> 1 (binary:000001)
                                      
-             "Seq Number" : packet[TCP].seq,
+             "seqNb" : packet[TCP].seq,
              #will get an integer representing the seq number
-             "Src Port": packet[TCP].sport,
+             "srcPort": packet[TCP].sport,
              #will get an integer representing the port number
-             "Dst Port": packet[TCP].dport,
-             "Src MAC": packet[Ether].src,
+             "dstPort": packet[TCP].dport,
+             "srcMac": packet[Ether].src,
              #will get a string representing the MAC address
-             "Dst MAC": packet[Ether].dst,
-             "Timestamp": packet.time,
+             "dstMac": packet[Ether].dst,
+             "time": packet.time,
              #will get a float representing the time in seconds since the epoch
                      
         }
