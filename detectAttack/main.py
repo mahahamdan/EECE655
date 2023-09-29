@@ -16,39 +16,41 @@ def packetsniffer():
 # we will define another function to extract information from the packet 
 def packet_extract(packet):
     try: 
-        #created dictionary to store packet information 
-        packet_info = {
-             "srcIp": packet[IP].src,
-             #will get a string representing the IP address
-             "dstIp" : packet[IP].dst,
-             "ackNb" : packet[TCP].ack,
-             #will get an integer representing the ack nunmber
-             "flags": packet[TCP].flags,
-             #will get an integer represeting each flag:
-             #ACK -> 16 (binary: 010000)
-             #PSH -> 8 (binary: 001000)
-             #RST -> 4 (binary 000100)
-             #SYN -> 2 (binary: 000010)
-             #FIN -> 1 (binary:000001)
+        srcIp=packet[IP].src
+        dstIp=packet[IP].dst
+    except IndexError:
+        srcIp=packet[IPv6].src
+        dstIp=packet[IPv6].dst
+    #created dictionary to store packet information 
+    packet_info = {
+        "srcIp": srcIp,
+         #will get a string representing the IP address
+         "dstIp" : dstIp,
+         "ackNb" : packet[TCP].ack,
+         #will get an integer representing the ack nunmber
+         "flags": packet[TCP].flags,
+         #will get an integer represeting each flag:
+         #ACK -> 16 (binary: 010000)
+         #PSH -> 8 (binary: 001000)
+         #RST -> 4 (binary 000100)
+         #SYN -> 2 (binary: 000010)
+         #FIN -> 1 (binary:000001)
                                      
-             "seqNb" : packet[TCP].seq,
-             #will get an integer representing the seq number
-             "srcPort": packet[TCP].sport,
-             #will get an integer representing the port number
-             "dstPort": packet[TCP].dport,
-             "srcMac": packet[Ether].src,
-             #will get a string representing the MAC address
-             "dstMac": packet[Ether].dst,
-             "time": packet.time,
-             #will get a float representing the time in seconds since the epoch
+         "seqNb" : packet[TCP].seq,
+         #will get an integer representing the seq number
+         "srcPort": packet[TCP].sport,
+         #will get an integer representing the port number
+         "dstPort": packet[TCP].dport,
+         "srcMac": packet[Ether].src,
+         #will get a string representing the MAC address
+         "dstMac": packet[Ether].dst,
+         "time": packet.time,
+         #will get a float representing the time in seconds since the epoch
                      
         }
-    except IndexError:
-        "srcIp": packet[IPv6].src
-        "destIp": packet[IPv6].dst
-
-        #add packet_info to the sharedData list
-        sharedData.append(packet_info)
+    
+    #add packet_info to the sharedData list
+    sharedData.append(packet_info)
 
 
 
