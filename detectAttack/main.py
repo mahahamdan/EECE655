@@ -1,16 +1,28 @@
 import threading
-
+from scapy.all import *
 
 # we will use threading to run multiple functions at the same time 
 # and thus not lose any packet while processing the data
+# we will use Scapy python library for network analysis (capture and analyze
+# TCP packets in real-time)
 
 # Batoul's part
 # function to sniff and format data
+def packetsniffer():
+    while True:
+        #capture TCP packets indefinitely and without storing internally
+        packet = sniff(filter="tcp", prn=packet_sniffer, count=0, store=False) 
+       
+        #extract information from the packet 
 
+    
+        #create dictionnary to store packet information 
+        packet_info = {
+        
+        }
 
-
-
-
+        #add packet_info to the sharedData list
+        sharedData.append(packet_info)
 
 
 
@@ -50,7 +62,7 @@ def detectAttack(sharedData):
 sharedData = []
 
 # creating the threads
-# thread1
+thread1 = threading.Thread(target=packetsniffer)
 thread2 = threading.Thread(target=detectAttack, args=(sharedData,))
 
 # starting the threads
