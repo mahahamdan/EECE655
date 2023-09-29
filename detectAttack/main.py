@@ -1,24 +1,47 @@
 import threading
-from scapy.all import *
+from scapy.all import IP, TCP, Ether, sniff
 
 # we will use threading to run multiple functions at the same time 
 # and thus not lose any packet while processing the data
-# we will use Scapy python library for network analysis (capture and analyze
-# TCP packets in real-time)
+# we will use Scapy python library for network analysis (capture and analyze TCP packets in real-time)
 
 # Batoul's part
 # function to sniff and format data
 def packetsniffer():
     while True:
         #capture TCP packets indefinitely and without storing internally
-        packet = sniff(filter="tcp", prn=packet_sniffer, store=False) 
-       
-        #extract information from the packet 
+        packet = sniff(filter="tcp", prn=packet_extract, store=False) 
+        # by specifying the packet_extract function as the callback function (prn), it will be called for each packet that is captured
 
-    
-        #create dictionnary to store packet information 
+# we will define another function to extract information from the packet 
+def packet_extract(packet):
+
+        #created dictionary to store packet information 
         packet_info = {
-        
+             "Src IP": packet[IP].src,
+             #will get a string representing the IP address
+             "Dst IP" : packet[IP].dst,
+             "Ack Number" : packet[TCP].ack,
+             #will get an integer representing the ack nunmber
+             "Flags": packet[TCP].flags,
+             #will get an integer represeting each flag:
+             #ACK -> 16 (binary: 010000)
+             #PSH -> 8 (binary: 001000)
+             #RST -> 4 (binary 000100)
+             #SYN -> 2 (binary: 000010)
+             #FIN -> 1 (binary:000001)
+                                     
+             "Seq Number" : packet[TCP].seq,
+             #will get an integer representing the seq number
+             "Src Port": packet[TCP].sport,
+             #will get an integer representing the port number
+             "Dst Port": packet[TCP].dport,
+             "Src MAC": packet[Ether].src,
+             #will get a string representing the MAC address
+             "Dst MAC": packet[Ether].dst,
+             "Timestamp": packet.time,
+             #will get a float representing the time in seconds since the epoch
+                     
         }
 
         #add packet_info to the sharedData list
