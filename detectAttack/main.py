@@ -1,16 +1,58 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import threading
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+# we will use threading to run multiple functions at the same time 
+# and thus not lose any packet while processing the data
+
+# Batoul's part
+# function to sniff and format data
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+
+
+
+
+# Bechara's part
+# function to detect the attack
+# in this function I will take data that was added to the sharedData list by Batoul's function
+# and use it to study the connections opened with the server to detect the attack
+# add more explanation later on
+def detectAttack(sharedData):
+    # i will use an index to keep track of where i am in the list in case the list gets updated while i'm processing data
+    index=0
+    local=[]
+    while True:
+        if len(sharedData) > index:
+            # in this if condition i check if there is new data in the list for me to use 
+
+            #if there is i will take it and save it to variable local to my thread
+            local=sharedData[index]
+            # we could then in order to save storage set the data in the list to None so that we know that this data was already processed
+            #sharedData[index] = None
+
+            # we increment the index so that we can check when new data is added to the list
+            index += 1
+        
+        if local != []:
+            # here i will process the data using the the local variable
+
+
+            # after i'm done processing the data i will set the local variable to an empty list
+            # so that i don't process the same data again
+            local=[]
+
+            
+
+
+# this list will be used so the two threads can share data between them
+sharedData = []
+
+# creating the threads
+# thread1
+thread2 = threading.Thread(target=detectAttack, args=(sharedData,))
+
+# starting the threads
+# thread1.start()
+# thread2.start()
