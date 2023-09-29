@@ -11,7 +11,7 @@ from scapy.all import *
 def packetsniffer():
     while True:
         #capture TCP packets indefinitely and without storing internally
-        packet = sniff(filter="tcp", prn=packet_sniffer, count=0, store=False) 
+        packet = sniff(filter="tcp", prn=packet_sniffer, store=False) 
        
         #extract information from the packet 
 
