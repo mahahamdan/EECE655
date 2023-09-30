@@ -109,12 +109,8 @@ def detectAttack(sharedData):
                     newSeq=local['seqNb']
                     newFlags=str(local['flags'])
                     newSrcMac=local['srcMac']
-                    newTime=local['time']
+                    newTime=int(local['time'])
                     newMac=local['srcMac']
-
-
-                    if newSrcMac!=stats[identifier]['srcMac']:
-                        print("=============== Need to check ===============")
 
                     if 'R' in stats[identifier]['flags']:
                         # if the connection was reset previously, 
@@ -126,16 +122,21 @@ def detectAttack(sharedData):
                             stats[identifier]['srcMac']=newSrcMac
                             stats[identifier]['Ack']=newAck
                             stats[identifier]['Seq']=newSeq
+                        elif 'R' in newFlags:
+                            logging(f'not an attack but need to review later why rst flag was sent twice\ntime first packet: {stats[identifier]["time"]}\ntime second packet: {newTime}\nsrc ip: {stats[identifier]["srcIp"]}')
+                        elif stats[identifier]['srcMac']!=newSrcMac:
+                            logging(f'MAC need to review later why the mac address changed\ntime first packet: {stats[identifier]["time"]}\ntime second packet: {newTime}\nsrc ip: {stats[identifier]["srcIp"]}')
                         else:
                             # if the connection was reset and someone is trying to continue it
                             # then an attack happened in the packet that sent the RST flag
-                            print("=============== Attack detected ===============\nDetails of the connection that sent the RST flag:")
-                            print(f"IP: {stats[identifier]['srcIp']}\nPort: {stats[identifier]['srcPort']}\nMAC: {stats[identifier]['srcMac']}\nTime: {stats[identifier]['time']}\nFlags: {stats[identifier]['flags']}\nAck: {stats[identifier]['Ack']}\nSeq: {stats[identifier]['Seq']}\nDst IP: {stats[identifier]['dstIp']}\nDst Port: {stats[identifier]['dstPort']}")
-                            print("=============== =============== ===============\nDetails of the connection that tried to continue:")
-                            print(f"IP: {local['srcIp']}\nPort: {local['srcPort']}\nMAC: {newMac}\nTime: {int(newTime)}\nFlags: {newFlags}\nAck: {newAck}\nSeq: {newSeq}\nDst IP: {local['dstIp']}\nDst Port: {local['dstPort']}")
+                            logging("=============== Attack detected ===============\nDetails of the connection that sent the RST flag:")
+                            logging(f"IP: {stats[identifier]['srcIp']}\nPort: {stats[identifier]['srcPort']}\nMAC: {stats[identifier]['srcMac']}\nTime: {stats[identifier]['time']}\nFlags: {stats[identifier]['flags']}\nAck: {stats[identifier]['Ack']}\nSeq: {stats[identifier]['Seq']}\nDst IP: {stats[identifier]['dstIp']}\nDst Port: {stats[identifier]['dstPort']}")
+                            logging("=============== =============== ===============\nDetails of the connection that tried to continue:")
+                            logging(f"IP: {local['srcIp']}\nPort: {local['srcPort']}\nMAC: {newMac}\nTime: {newTime}\nFlags: {newFlags}\nAck: {newAck}\nSeq: {newSeq}\nDst IP: {local['dstIp']}\nDst Port: {local['dstPort']}")
+                            logging("=============== =============== ===============")
                     else:
                         stats[identifier]['flags']=newFlags
-                        stats[identifier]['time']=int(newTime)
+                        stats[identifier]['time']=newTime
                         stats[identifier]['srcMac']=newSrcMac
                         stats[identifier]['Ack']=newAck
                         stats[identifier]['Seq']=newSeq
@@ -146,6 +147,12 @@ def detectAttack(sharedData):
             local=[]
             # print(stats)
 
+
+# we will use a function to write the logs in
+def logging(text):
+    print('logged something')
+    with open("logs.txt", "a") as file:
+        file.write(text + "\n")
 
 
 # this list will be used so the two threads can share data between them
