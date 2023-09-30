@@ -91,7 +91,7 @@ def detectAttack(sharedData):
             if local['srcIp']!=myIp and local['dstIp']==myIp:
                 # the connection is incoming
                 # identify the connection by the source IP and port
-                identifier=f"{local['srcIp']}:{local['srcPort']}"
+                identifier=f"{local['srcIp']}:{local['srcPort']}/{local['dstIp']}:{local['dstPort']}"
                 if identifier not in stats:
                     # if the connection is new i will add it to the dictionary
                     stats[identifier]={'Ack':local['ackNb'],
@@ -100,7 +100,10 @@ def detectAttack(sharedData):
                                        'srcMac':local['srcMac'],
                                        'time':int(local['time']),
                                        'srcPort':local['srcPort'],
-                                       'srcIp':local['srcIp'],}
+                                       'srcIp':local['srcIp'],
+                                       'dstPort':local['dstPort'],
+                                       'dstIp':local['dstIp']
+                                       }
                 else:
                     newAck=local['ackNb']
                     newSeq=local['seqNb']
@@ -108,6 +111,7 @@ def detectAttack(sharedData):
                     newSrcMac=local['srcMac']
                     newTime=local['time']
                     newMac=local['srcMac']
+
 
                     if newSrcMac!=stats[identifier]['srcMac']:
                         print("=============== Need to check ===============")
@@ -126,9 +130,9 @@ def detectAttack(sharedData):
                             # if the connection was reset and someone is trying to continue it
                             # then an attack happened in the packet that sent the RST flag
                             print("=============== Attack detected ===============\nDetails of the connection that sent the RST flag:")
-                            print(f"IP: {stats[identifier]['srcIp']}\nPort: {stats[identifier]['srcPort']}\nMAC: {stats[identifier]['srcMac']}\nTime: {stats[identifier]['time']}\nFlags: {stats[identifier]['flags']}")
+                            print(f"IP: {stats[identifier]['srcIp']}\nPort: {stats[identifier]['srcPort']}\nMAC: {stats[identifier]['srcMac']}\nTime: {stats[identifier]['time']}\nFlags: {stats[identifier]['flags']}\nAck: {stats[identifier]['Ack']}\nSeq: {stats[identifier]['Seq']}\nDst IP: {stats[identifier]['dstIp']}\nDst Port: {stats[identifier]['dstPort']}")
                             print("=============== =============== ===============\nDetails of the connection that tried to continue:")
-                            print(f"IP: {local['srcIp']}\nPort: {local['srcPort']}\nMAC: {newMac}\nTime: {int(newTime)}\nFlags: {newFlags}")
+                            print(f"IP: {local['srcIp']}\nPort: {local['srcPort']}\nMAC: {newMac}\nTime: {int(newTime)}\nFlags: {newFlags}\nAck: {newAck}\nSeq: {newSeq}\nDst IP: {local['dstIp']}\nDst Port: {local['dstPort']}")
                     else:
                         stats[identifier]['flags']=newFlags
                         stats[identifier]['time']=int(newTime)
@@ -153,5 +157,5 @@ thread1 = threading.Thread(target=packetsniffer)
 thread2 = threading.Thread(target=detectAttack, args=(sharedData,))
 
 # starting the threads
-# thread1.start()
-# thread2.start()
+thread1.start()
+thread2.start()
