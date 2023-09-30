@@ -123,7 +123,8 @@ def detectAttack(sharedData):
                             stats[identifier]['Ack']=newAck
                             stats[identifier]['Seq']=newSeq
                         elif 'R' in newFlags:
-                            logging(f'not an attack but need to review later why rst flag was sent twice\ntime first packet: {stats[identifier]["time"]}\ntime second packet: {newTime}\nsrc ip: {stats[identifier]["srcIp"]}')
+                            pass
+                            # logging(f'not an attack but need to review later why rst flag was sent twice\ntime first packet: {stats[identifier]["time"]}\ntime second packet: {newTime}\nsrc ip: {stats[identifier]["srcIp"]}')
                         elif stats[identifier]['srcMac']!=newSrcMac:
                             logging(f'MAC need to review later why the mac address changed\ntime first packet: {stats[identifier]["time"]}\ntime second packet: {newTime}\nsrc ip: {stats[identifier]["srcIp"]}')
                         else:
@@ -152,7 +153,7 @@ def detectAttack(sharedData):
 def logging(text):
     print('logged something')
     with open("logs.txt", "a") as file:
-        file.write(text + "\n")
+        file.write(text + "\n---------------------------\n")
 
 
 # this list will be used so the two threads can share data between them
