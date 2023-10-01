@@ -30,15 +30,21 @@ These details are organized into a dictionary called packet_info.
 Each packet_info dictionary is then appended to the shared list sharedData. This packet sniffing and extraction process ensures that the tool captures and compiles essential network data for further analysis.
 
 **Bechara's Part:**
+The function detectAttack() uses the data formatted by the packetsniffer() function to detect TCP reset attacks. 
+It first checks if the packet is sent to the server and after that for every connection coming to the server we log information about the last packet we received from the client.
+If the last packet received from the client has the RST flag set, we check if the new packet has the SYN flag set. If it is the case then it is not an attack.
+But in the case the connection tries to continue, then we detected that the attack happened and we log the information about the attack in the file logs.txt.
 
 
 
 
 ### How to run the programs:
 
-
-
-
+For the detection tool we need the following libraries:
+- scapy (pip install scapy)
+- threading (pip install thread6)
+After installing the libraries, we can run the python code stored in the directory detectAttack (superuser privileges are required to run the code)
+The code will keep running until it is stopped by the user (using ctrl+c)
 
 
 ### Results and Screenshots: 
@@ -77,8 +83,10 @@ We can view the reset packet sent using wireshark
 ![Diagram](./Screenshots/Wireshark.png)
 
 ### Detect the attack:
+Before the attack is launched, we run the code of detectAttack/main.py to start the detection tool. 
 
+When an attack is launched, the detection tool detects it and logs the attack information in the file logs.txt
+![Diagram](./Screenshots/logs%20after%20detection.png)
 
-
-
-
+We also get a notification in the terminal that an attack has been detected
+![Diagram](./Screenshots/messages%20in%20console.png)
