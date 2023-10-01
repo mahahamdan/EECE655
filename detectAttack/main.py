@@ -112,6 +112,11 @@ def detectAttack(sharedData):
                     newTime=int(local['time'])
                     newMac=local['srcMac']
 
+                    if (stats[identifier]['srcMac']!=newSrcMac) and ('S' not in newFlags):
+                        logging("=============== Attack detected ===============\nA MAC address different than the last one used with this IP was used:")
+                        logging(f"IP: {stats[identifier]['srcIp']}\nPort: {stats[identifier]['srcPort']}\nOld MAC: {stats[identifier]['srcMac']}\nNew MAC: {newSrcMac}\nTime: {stats[identifier]['time']}\nFlags: {stats[identifier]['flags']}\nAck: {stats[identifier]['Ack']}\nSeq: {stats[identifier]['Seq']}\nDst IP: {stats[identifier]['dstIp']}\nDst Port: {stats[identifier]['dstPort']}")
+                        logging("=============== =============== ===============")
+
                     if 'R' in stats[identifier]['flags']:
                         # if the connection was reset previously, 
                         # check if someone is trying to open a new connection with syn flag
@@ -125,8 +130,6 @@ def detectAttack(sharedData):
                         elif 'R' in newFlags:
                             pass
                             # logging(f'not an attack but need to review later why rst flag was sent twice\ntime first packet: {stats[identifier]["time"]}\ntime second packet: {newTime}\nsrc ip: {stats[identifier]["srcIp"]}')
-                        elif stats[identifier]['srcMac']!=newSrcMac:
-                            logging(f'MAC need to review later why the mac address changed\ntime first packet: {stats[identifier]["time"]}\ntime second packet: {newTime}\nsrc ip: {stats[identifier]["srcIp"]}')
                         else:
                             # if the connection was reset and someone is trying to continue it
                             # then an attack happened in the packet that sent the RST flag
@@ -135,6 +138,7 @@ def detectAttack(sharedData):
                             logging("=============== =============== ===============\nDetails of the connection that tried to continue:")
                             logging(f"IP: {local['srcIp']}\nPort: {local['srcPort']}\nMAC: {newMac}\nTime: {newTime}\nFlags: {newFlags}\nAck: {newAck}\nSeq: {newSeq}\nDst IP: {local['dstIp']}\nDst Port: {local['dstPort']}")
                             logging("=============== =============== ===============")
+                        
                     else:
                         stats[identifier]['flags']=newFlags
                         stats[identifier]['time']=newTime
