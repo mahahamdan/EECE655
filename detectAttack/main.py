@@ -11,19 +11,20 @@ from scapy.all import IPv6, IP, TCP, Ether, sniff, get_if_addr, conf, get_if_hwa
 # function to sniff and format data
 def packetsniffer():
     while True:
-        #capture TCP packets indefinitely and without storing internally
+        #Capture TCP packets indefinitely and without storing internally
         packet = sniff(filter="tcp", prn=packet_extract, store=False) 
-        # by specifying the packet_extract function as the callback function (prn), it will be called for each packet that is captured
+        #By specifying the packet_extract function as the callback function (prn), it will be called for each packet that is captured
 
-# we will define another function to extract information from the packet 
+# Function to extract information from the packet 
 def packet_extract(packet):
+    #Try to extract IP addresses from IP header, if unsuccessful (IndexError), extract from IPv6 header.
     try: 
         srcIp=packet[IP].src
         dstIp=packet[IP].dst
     except IndexError:
         srcIp=packet[IPv6].src
         dstIp=packet[IPv6].dst
-    #created dictionary to store packet information 
+    #Created dictionary to store packet information 
     packet_info = {
         "srcIp": srcIp,
          #will get a string representing the IP address
