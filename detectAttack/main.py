@@ -87,10 +87,9 @@ def detectAttack(sharedData):
             # here i will process the data using the the local variable
 
             # i will check if the connection is incoming or outgoing
-            
             if local['srcIp']!=myIp and local['dstIp']==myIp:
                 # the connection is incoming
-                # identify the connection by the source IP and port
+                # identify the connection by the source IP and port and destination IP and port
                 identifier=f"{local['srcIp']}:{local['srcPort']}/{local['dstIp']}:{local['dstPort']}"
                 if identifier not in stats:
                     # if the connection is new i will add it to the dictionary
@@ -105,6 +104,7 @@ def detectAttack(sharedData):
                                        'dstIp':local['dstIp']
                                        }
                 else:
+                    # if the connection is not new i will check if it was reset
                     newAck=local['ackNb']
                     newSeq=local['seqNb']
                     newFlags=str(local['flags'])
@@ -112,6 +112,9 @@ def detectAttack(sharedData):
                     newTime=int(local['time'])
                     newMac=local['srcMac']
 
+                    # first check if the mac address communicating with us is the same as the one used in the previous packet
+                    # it is an easy way to detect if an attacker is spoofing their IP address but forgot about the MAC address
+                    # we check the Syn flag to not flag the packet if it is a new connection
                     if (stats[identifier]['srcMac']!=newSrcMac) and ('S' not in newFlags):
                         logging("=============== Attack detected ===============\nA MAC address different than the last one used with this IP was used:")
                         logging(f"IP: {stats[identifier]['srcIp']}\nPort: {stats[identifier]['srcPort']}\nOld MAC: {stats[identifier]['srcMac']}\nNew MAC: {newSrcMac}\nTime: {stats[identifier]['time']}\nFlags: {stats[identifier]['flags']}\nAck: {stats[identifier]['Ack']}\nSeq: {stats[identifier]['Seq']}\nDst IP: {stats[identifier]['dstIp']}\nDst Port: {stats[identifier]['dstPort']}")
@@ -119,7 +122,7 @@ def detectAttack(sharedData):
 
                     if 'R' in stats[identifier]['flags']:
                         # if the connection was reset previously, 
-                        # check if someone is trying to open a new connection with syn flag
+                        # check if someone is trying to open a new connection with syn flag (which is normal)
                         # of if someone is trying to continue the connection (which is when the attack happened)
                         if 'S' in newFlags:
                             stats[identifier]['flags']=newFlags
@@ -128,6 +131,8 @@ def detectAttack(sharedData):
                             stats[identifier]['Ack']=newAck
                             stats[identifier]['Seq']=newSeq
                         elif 'R' in newFlags:
+                            # while testing we noticed that sometimes the RST flag is sent multiple times in a row even when it's not an attack
+                            # so we have to ignore it so to catch false positives
                             pass
                             # logging(f'not an attack but need to review later why rst flag was sent twice\ntime first packet: {stats[identifier]["time"]}\ntime second packet: {newTime}\nsrc ip: {stats[identifier]["srcIp"]}')
                         else:
