@@ -10,13 +10,13 @@
 ### Description of the tool:
 #### Attack Tool:
 
-The conduct attack tool , build with Python and Scapy , a technique used by hackers to disrupt an ongoing connection between two computers in a network.
+The conduct attack tool, built with Python and Scapy, is a technique used by hackers to disrupt an ongoing connection between two computers in a network.
 
 **Mounir's Part:**
 
-For the Python code, we know that Scapy is an alternative to Wireshark for analyzing and manipulating packets. Thus, we Gathered Needed Info by Sniffing
-The info needed are:
+For the Python code, we know that Scapy is an alternative to Wireshark for analyzing and manipulating packets. We wanted to gather the needed information to conduct our attack. Thus, we used the sniff function to capture a specific packet based on certain criteria: it must have a TCP layer, originate from "machine Y", and have the destination "machine X".
 
+After that, we extracted from the captured packet the following info: 
 - Destination port
 - Source port
 - Destination IP
