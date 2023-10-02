@@ -65,7 +65,7 @@ t = t[0]
 
 
 ##########################################################################################
-##   Part B: Sending the Packet and Guarantying Correct Sequence Number (done by Maha)  ##
+##   Part B: Constructing and Sending the Packet and Guarantying Correct Sequence Number (done by Maha)  ##
 ##########################################################################################
 
 
