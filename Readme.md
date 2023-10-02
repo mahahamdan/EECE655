@@ -10,9 +10,23 @@
 ### Description of the tool:
 #### Attack Tool:
 
+The conduct attack tool , build with Python and Scapy , a technique used by hackers to disrupt an ongoing connection between two computers in a network.
 
+**Mounir's Part:**
 
+For the Python code, we know that Scapy is an alternative to Wireshark for analyzing and manipulating packets. Thus, we Gathered Needed Info by Sniffing
+The info needed are:
 
+- Destination port
+- Source port
+- Destination IP
+- Source IP
+- Sequence Number
+
+**Maha's Part:**
+
+The tool uses the gathered data to create the IP and the TCP headers' data and then send aa packet with w reset flag 'R'.
+This packet is sent in a loop for sequence number to sequence number + 30 (attacker's strategy). Note that the first sequence number to send packet on is the one captured by the sniffing tool.
 
 #### Detection Tool:
 The detection tool, built with Python and Scapy, is designed to monitor and analyze TCP packets in real-time. By utilizing multi-threading, it ensures efficient packet capture without any losses. The tool's primary goal is to detect suspicious network activities, particularly the TCP reset attack, by examining network traffic and extracting pertinent information from the captured packets.
