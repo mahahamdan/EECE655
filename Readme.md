@@ -49,7 +49,7 @@ The code will keep running until it is stopped by the user (using ctrl+c)
 
 ### Results and Screenshots: 
 
-### Conduct an attack:
+### Conduct an attack(Maha and Mounir's Part):
 
 We launched two virtual machines X and Y using Oracle virtual Box with the bellow settings 
 
@@ -90,3 +90,10 @@ When an attack is launched, the detection tool detects it and logs the attack in
 
 We also get a notification in the terminal that an attack has been detected
 ![Diagram](./Screenshots/messages%20in%20console.png)
+
+<br>
+
+To run the code: 
+- After connecting the two devices using telnet
+- Install scapy and run the main.py as (superuser)
+- Check then the connection it will be closed by a foreign host.
